@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>dotnet_gcs</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Google.Cloud.PubSub.V1" Version="2.1.0" />
+    <PackageReference Include="Google.Cloud.Storage.V1" Version="3.3.0" />
+    <PackageReference Include="Instana.Tracing.Core" Version="1.190.2" />
+    <PackageReference Include="Instana.Tracing.Core.Rewriter.Linux" Version="1.190.2" />
+  </ItemGroup>
+
+</Project>

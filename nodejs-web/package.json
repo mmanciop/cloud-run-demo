@@ -1,0 +1,18 @@
+{
+  "name": "batch-producer-nodejs",
+  "version": "1.0.0",
+  "description": "A headless producer application for Cloud Run",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@grpc/grpc-js": "^1.1.8",
+    "express": "^4.17.1",
+    "google-protobuf": "^3.13.0",
+    "grpc": "^1.24.3",
+    "request": "^2.88.2"
+  }
+}
