@@ -1,0 +1,25 @@
+[project]
+id = "gcr-demo-instana-java-gradle"
+version = "1.0"
+
+[build]
+
+[[build.buildpacks]]
+id = "google.java.runtime"
+uri = "urn:cnb:builder:google.java.runtime"
+
+[[build.buildpacks]]
+id = "google.java.gradle"
+uri = "urn:cnb:builder:google.java.gradle"
+
+[[build.buildpacks]]
+id = "google.config.entrypoint"
+uri = "urn:cnb:builder:google.config.entrypoint"
+
+[[build.buildpacks]]
+id = "google.utils.label"
+uri = "urn:cnb:builder:google.utils.label"
+
+[[build.buildpacks]]
+id = "instana.gcp.cloudrun"
+uri = "docker:/containers.instana.io/instana/release/google/buildpack"

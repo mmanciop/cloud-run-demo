@@ -1,0 +1,21 @@
+[project]
+id = "gcr-demo-instana-nodejs"
+version = "1.0"
+
+[build]
+
+[[build.buildpacks]]
+id = "google.nodejs.runtime"
+uri = "urn:cnb:builder:google.nodejs.runtime"
+
+[[build.buildpacks]]
+id = "google.nodejs.npm"
+uri = "urn:cnb:builder:google.nodejs.npm"
+
+[[build.buildpacks]]
+id = "google.utils.label"
+uri = "urn:cnb:builder:google.utils.label"
+
+[[build.buildpacks]]
+id = "instana.gcp.cloudrun"
+uri = "docker:/containers.instana.io/instana/release/google/buildpack"

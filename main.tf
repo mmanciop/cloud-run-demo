@@ -32,7 +32,7 @@ resource "google_cloud_run_service" "nodejs" {
 
         env {
           name = "GCP_PROJECT"
-          value = var.project
+          value = var.project_id
         }
 
         env {
@@ -42,11 +42,11 @@ resource "google_cloud_run_service" "nodejs" {
 
         env {
           name = "INSTANA_ENDPOINT_URL"
-          value = var.serverless_endpoint
+          value = var.instana_serverless_endpoint
         }
         env {
           name = "INSTANA_AGENT_KEY"
-          value = var.agent_key
+          value = var.instana_agent_key
         }
         env {
           name = "INSTANA_ZONE"
@@ -79,8 +79,7 @@ resource "google_cloud_run_service" "nodejs" {
 
   depends_on = [
     google_project_service.cloud-run,
-    null_resource.image_nodejs,
-    google_cloud_run_service.go
+    null_resource.image_nodejs
   ]
 }
 
@@ -109,7 +108,7 @@ resource "google_cloud_run_service" "go" {
 
         env {
           name = "GCP_PROJECT"
-          value = var.project
+          value = var.project_id
         }
         env {
           name = "PUBSUB_TOPIC"
@@ -117,11 +116,11 @@ resource "google_cloud_run_service" "go" {
         }
         env {
           name = "INSTANA_ENDPOINT_URL"
-          value = var.serverless_endpoint
+          value = var.instana_serverless_endpoint
         }
         env {
           name = "INSTANA_AGENT_KEY"
-          value = var.agent_key
+          value = var.instana_agent_key
         }
         env {
           name = "INSTANA_ZONE"
@@ -150,7 +149,6 @@ resource "google_cloud_run_service" "go" {
 
   depends_on = [
     google_project_service.cloud-run,
-    google_cloud_run_service.java,
     null_resource.image_go
   ]
 }
@@ -184,15 +182,19 @@ resource "google_cloud_run_service" "java" {
         }
         env {
           name = "INSTANA_ENDPOINT_URL"
-          value = var.serverless_endpoint
+          value = var.instana_serverless_endpoint
         }
         env {
           name = "INSTANA_AGENT_KEY"
-          value = var.agent_key
+          value = var.instana_agent_key
         }
         env {
           name = "INSTANA_DEBUG"
           value = "1"
+        }
+        env {
+          name = "_JAVA_OPTIONS"
+          value = "-Xmx264M"
         }
         env {
           name = "PUBSUB_TOPIC"
@@ -206,7 +208,7 @@ resource "google_cloud_run_service" "java" {
         resources {
           limits = {
             cpu = "4"
-            memory = "2Gi"
+            memory = "1Gi"
           }
         }
       }
@@ -262,11 +264,11 @@ resource "google_cloud_run_service" "dotnet" {
         }
         env {
           name = "INSTANA_ENDPOINT_URL"
-          value = var.serverless_endpoint
+          value = var.instana_serverless_endpoint
         }
         env {
           name = "INSTANA_AGENT_KEY"
-          value = var.agent_key
+          value = var.instana_agent_key
         }
         env {
           name = "INSTANA_LOG_LEVEL"
@@ -278,7 +280,7 @@ resource "google_cloud_run_service" "dotnet" {
         }
         env {
           name = "GCP_PROJECT"
-          value = var.project
+          value = var.project_id
         }
         env {
           name = "PUBSUB_TOPIC"

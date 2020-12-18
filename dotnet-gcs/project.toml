@@ -1,0 +1,21 @@
+[project]
+id = "gcr-demo-instana-netcore"
+version = "1.0"
+
+[build]
+
+[[build.buildpacks]]
+id = "google.dotnet.runtime"
+uri = "urn:cnb:builder:google.dotnet.runtime"
+
+[[build.buildpacks]]
+id = "google.dotnet.publish"
+uri = "urn:cnb:builder:google.dotnet.publish"
+
+[[build.buildpacks]]
+id = "google.utils.label"
+uri = "urn:cnb:builder:google.utils.label"
+
+[[build.buildpacks]]
+id = "instana.gcp.cloudrun"
+uri = "docker:/containers.instana.io/instana/release/google/buildpack"

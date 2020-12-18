@@ -1,0 +1,30 @@
+{
+    "name": "gcr-demo-instana-load-gen",
+    "env": {
+        "INSTANA_ENDPOINT_URL": {
+            "required": true
+        },
+        "INSTANA_AGENT_KEY": {
+            "required": true
+        }
+    },
+    "options": {
+        "allow-unauthenticated": true,
+        "memory": "256Mi",
+        "cpu": "1",
+        "port": 80
+    },
+    "build": {
+        "skip": false,
+        "buildpacks": {
+            "builder": "gcr.io/buildpacks/builder"
+        }
+    },
+    "hooks": {
+        "prebuild": {
+            "commands": [
+                "bash deploy.sh"
+            ]
+        }
+    }
+}
