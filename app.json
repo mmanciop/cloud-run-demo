@@ -25,6 +25,11 @@
             "commands": [
                 "bash deploy.sh"
             ]
+        },
+        "postcreate": {
+            "commands": [
+                "bash run_demo.sh"
+            ]
         }
     }
 }

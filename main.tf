@@ -207,7 +207,7 @@ resource "google_cloud_run_service" "java" {
 
         resources {
           limits = {
-            cpu = "4"
+            cpu = "2"
             memory = "1Gi"
           }
         }

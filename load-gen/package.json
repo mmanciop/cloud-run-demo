@@ -13,6 +13,7 @@
     "express": "^4.17.1",
     "google-protobuf": "^3.13.0",
     "grpc": "^1.24.3",
+    "loadtest": "^5.0.0",
     "request": "^2.88.2"
   }
 }

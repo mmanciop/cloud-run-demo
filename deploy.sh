@@ -47,15 +47,6 @@ else
     echo 'Found'
 fi
 
-# echo -n 'Pulling the Instana Cloud Native Buildpack in the local Docker daemon ... '
-# if ! output=$(echo "${INSTANA_AGENT_KEY}" | docker login containers.instana.io -u '_' --password-stdin && docker pull containers.instana.io/instana/release/google/buildpack ); then
-#     echo 'Failed:'
-#     echo "${output}"
-#     exit 1
-# else
-#     echo 'OK'
-# fi
-
 echo 'Applying Terraform ... '
 
 terraform apply -auto-approve
