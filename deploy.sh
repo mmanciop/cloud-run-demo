@@ -2,7 +2,7 @@
 
 echo 'Enabling Google Cloud Platform APIs:'
 
-apis=( 'appengine.googleapis.com' 'cloudbuild.googleapis.com' 'compute.googleapis.com' 'cloudscheduler.googleapis.com' )
+apis=( 'cloudbuild.googleapis.com' 'compute.googleapis.com' )
 
 for api in "${apis[@]}"
 do
@@ -38,15 +38,8 @@ else
     echo 'OK'
 fi
 
-echo -n 'Checking for existence of App Engine application ... '
-if ! output=$(terraform import google_app_engine_application.scheduler_application "${GOOGLE_CLOUD_PROJECT}" || true); then
-    echo 'Import into Terraform failed:'
-    echo "${output}"
-    exit 1
-else
-    echo 'Found'
-fi
-
 echo 'Applying Terraform ... '
 
 terraform apply -auto-approve
+
+cp entry_service_url load-gen/

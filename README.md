@@ -12,7 +12,7 @@
    export PROJECT="<project-name>"
    gcloud projects create "${PROJECT}"
    gcloud config set project $(gcloud projects list --filter="${PROJECT}" --format="value(NAME, PROJECT_ID)" | grep "${PROJECT}" | awk '{ print $2 }')
-   gcloud services enable appengine.googleapis.com cloudbuild.googleapis.com compute.googleapis.com cloudscheduler.googleapis.com
+   gcloud services enable cloudbuild.googleapis.com compute.googleapis.com
    ```
 
 3. Clone demo repo:
@@ -26,6 +26,5 @@
 
    terraform init
 
-   (terraform import google_app_engine_application.scheduler_application "${DEVSHELL_PROJECT_ID}" || true) > /dev/null 2>&1
    terraform apply -auto-approve -var "project_id=${DEVSHELL_PROJECT_ID}"
    ```
