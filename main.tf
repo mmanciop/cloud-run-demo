@@ -318,12 +318,3 @@ resource "google_cloud_run_service_iam_policy" "dotnet_noauth" {
 
   policy_data = data.google_iam_policy.noauth.policy_data
 }
-
-resource "local_file" "entry_service_url" {
-  content = google_cloud_run_service.nodejs.status[0].url
-  filename = "entry_service_url"
-
-  depends_on = [
-    google_cloud_run_service.nodejs
-  ]
-}

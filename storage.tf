@@ -1,6 +1,6 @@
 resource "google_storage_bucket" "dotnet-target" {
   name          = "${var.prefix}-${random_string.uid.result}-dotnet-bucket"
-  location      = "EU"
+  location      = "US" # TODO Base this on region
   force_destroy = true
 
   lifecycle_rule {

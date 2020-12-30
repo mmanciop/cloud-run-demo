@@ -12,4 +12,10 @@ readonly loadgen_url=$( \
     | jq -r --exit-status '.status.address.url' \
 )
 
-curl "${loadgen_url}"
+echo "Demo entry point is available at: ${loadgen_url}"
+
+echo 'Preparing load generator ... '
+
+(cd load-gen && npm install > /dev/null)
+
+(cd load-gen && ENDPOINT_SERVICE_URL=${loadgen_url} npm start)

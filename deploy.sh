@@ -41,5 +41,3 @@ fi
 echo 'Applying Terraform ... '
 
 terraform apply -auto-approve
-
-cp entry_service_url load-gen/
