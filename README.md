@@ -1,6 +1,6 @@
 # Cloud Run Composite Example
 
-[![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://deploy.cloud.run)
+[![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://ssh.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fmmanciop%2Fcloud-run-demo.git&cloudshell_workspace=instana-cloud-run-demo&shellonly=true)
 
 ## Development
 

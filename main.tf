@@ -28,7 +28,7 @@ resource "google_cloud_run_service" "nodejs" {
   template {
     spec {
       containers {
-        image = "${data.google_container_registry_image.nodejs.image_url}:${substr(data.external.hash_nodejs.result.hash, 0, 5)}"
+        image = data.google_container_registry_image.nodejs.image_url
 
         env {
           name = "GCP_PROJECT"
@@ -104,7 +104,7 @@ resource "google_cloud_run_service" "go" {
   template {
     spec {
       containers {
-        image = "${data.google_container_registry_image.go.image_url}:${substr(data.external.hash_go.result.hash, 0, 5)}"
+        image = data.google_container_registry_image.go.image_url
 
         env {
           name = "GCP_PROJECT"
@@ -174,7 +174,7 @@ resource "google_cloud_run_service" "java" {
   template {
     spec {
       containers {
-        image = "${data.google_container_registry_image.java.image_url}:${substr(data.external.hash_java.result.hash, 0, 5)}"
+        image = data.google_container_registry_image.java.image_url
 
         env {
           name = "INSTANA_ZONE"
@@ -256,7 +256,7 @@ resource "google_cloud_run_service" "dotnet" {
   template {
     spec {
       containers {
-        image = "${data.google_container_registry_image.dotnet.image_url}:${substr(data.external.hash_dotnet.result.hash, 0, 5)}"
+        image = data.google_container_registry_image.dotnet.image_url
 
         env {
           name = "INSTANA_ZONE"
@@ -319,11 +319,9 @@ resource "google_cloud_run_service_iam_policy" "dotnet_noauth" {
   policy_data = data.google_iam_policy.noauth.policy_data
 }
 
-resource "local_file" "entry_service_url" {
-  content = google_cloud_run_service.nodejs.status[0].url
-  filename = "entry_service_url"
+resource "local_file" "demo_entrypoint_url" {
+  content  = google_cloud_run_service.nodejs.status[0].url
+  filename = "${path.module}/entrypoint_url"
 
-  depends_on = [
-    google_cloud_run_service.nodejs
-  ]
+  depends_on = [ google_cloud_run_service.nodejs ]
 }
