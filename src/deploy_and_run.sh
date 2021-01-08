@@ -31,7 +31,7 @@ fi
 
 apis=( 'cloudbuild.googleapis.com' 'compute.googleapis.com' 'storage-api.googleapis.com' 'run.googleapis.com' )
 apis_to_s=$(printf "* %s\\n"  "${apis[@]}")
-if ! dialog --keep-window --clear --backtitle 'Instana Cloud Run Demo' --title ' Enabling Google Cloud APIs ' --yesno "To run this demo, the following APIs need to be enabled; shall we?\n${apis_to_s}" 24 80; then
+if ! dialog --keep-window --clear --backtitle 'Instana Cloud Run Demo' --title ' Enabling Google Cloud APIs ' --cr-wrap --yesno "To run this demo, the following APIs need to be enabled; shall we?\n\n${apis_to_s}" 24 80; then
     clear
     exit 0;
 fi
@@ -45,6 +45,7 @@ do
         echo "${output}"
         exit 1
     fi
+    echo
 done
 
 i=0
