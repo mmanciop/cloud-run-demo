@@ -13,13 +13,13 @@ GOOGLE_CLOUD_PROJECTS=()
 while read -r project; do
     i=$((i+1))
 
-    project_id=$(echo "${project}" | awk '{ print $1 }' )
-    project_name=$(echo "${project}" | awk '{ print $2 }' )
+    project_name=$(echo "${project}" | awk -F ',' '{ print $1 }' )
+    project_id=$(echo "${project}" | awk -F ',' '{ print $2 }' )
 
     GOOGLE_CLOUD_PROJECTS+=("${project_id}")
 
     W+=("${i}" "${project_name}")
-done < <( gcloud projects list | tail -n +2 )
+done < <( gcloud projects list --format='csv[no-heading](name, projectId)' | sort)
 
 i=$(dialog --keep-window --clear --backtitle 'Instana Cloud Run Demo' --title ' Google Cloud Project ' --menu 'Choose which Project to deploy the demo into:' 24 80 17 "${W[@]}" 3>&2 2>&1 1>&3)
 GOOGLE_CLOUD_PROJECT=${GOOGLE_CLOUD_PROJECTS[$((i-1))]}
@@ -48,38 +48,42 @@ do
     echo
 done
 
-i=0
-W=()
-GOOGLE_CLOUD_REGIONS=()
-while read -r region; do
-    i=$((i+1))
-    GOOGLE_CLOUD_REGIONS+=("${region}")
-    W+=("${i}" "${region}")
-done < <( CLOUDSDK_CORE_PROJECT="${GOOGLE_CLOUD_PROJECT}" gcloud run regions list --platform=managed | tail -n +2 )
+if [ ! -f $HOME/local.auto.tfvars ]
+then
 
-i=$(dialog --keep-window --clear --backtitle 'Instana Cloud Run Demo' --title ' Google Cloud Region' --menu 'Choose which Region to deploy the demo into:' 24 80 17 "${W[@]}" 3>&2 2>&1 1>&3)
-GOOGLE_CLOUD_REGION=${GOOGLE_CLOUD_REGIONS[$((i-1))]}
+	i=0
+	W=()
+	GOOGLE_CLOUD_REGIONS=()
+	while read -r region; do
+	    i=$((i+1))
+	    GOOGLE_CLOUD_REGIONS+=("${region}")
+	    W+=("${i}" "${region}")
+	done < <( CLOUDSDK_CORE_PROJECT="${GOOGLE_CLOUD_PROJECT}" gcloud run regions list --platform=managed | tail -n +2 )
 
-if ! INSTANA_ENDPOINT_URL=$(dialog --keep-window --clear --backtitle 'Instana Cloud Run Demo' --title ' Instana Endpoint URL ' --inputbox 'Enter the Instana Endpoint URL of your Instana Dashboard:' 8 80  3>&2 2>&1 1>&3); then
-    clear
-    exit 0;
+	i=$(dialog --keep-window --clear --backtitle 'Instana Cloud Run Demo' --title ' Google Cloud Region' --menu 'Choose which Region to deploy the demo into:' 24 80 17 "${W[@]}" 3>&2 2>&1 1>&3)
+	GOOGLE_CLOUD_REGION=${GOOGLE_CLOUD_REGIONS[$((i-1))]}
+
+	if ! INSTANA_ENDPOINT_URL=$(dialog --keep-window --clear --backtitle 'Instana Cloud Run Demo' --title ' Instana Endpoint URL ' --inputbox 'Enter the Instana Endpoint URL of your Instana Dashboard:' 8 80  3>&2 2>&1 1>&3); then
+	    clear
+	    exit 0;
+	fi
+
+	if ! INSTANA_AGENT_KEY=$(dialog --keep-window --clear --backtitle 'Instana Cloud Run Demo' --title ' Instana Agent Key ' --inputbox 'Enter the Instana Agent Key of your Instana Dashboard:' 8 80  3>&2 2>&1 1>&3); then
+	    clear
+	    exit 0;
+	fi
+
+	clear
+
+	echo -n 'Initializing Terraform ... '
+
+	echo "instana_agent_key=\"${INSTANA_AGENT_KEY}\"
+	instana_download_key=\"${INSTANA_AGENT_KEY}\"
+	instana_serverless_endpoint=\"${INSTANA_ENDPOINT_URL}\"
+	project_id=\"${GOOGLE_CLOUD_PROJECT}\"
+	region=\"${GOOGLE_CLOUD_REGION}\"
+	" > ~/local.auto.tfvars
 fi
-
-if ! INSTANA_AGENT_KEY=$(dialog --keep-window --clear --backtitle 'Instana Cloud Run Demo' --title ' Instana Agent Key ' --inputbox 'Enter the Instana Agent Key of your Instana Dashboard:' 8 80  3>&2 2>&1 1>&3); then
-    clear
-    exit 0;
-fi
-
-clear
-
-echo -n 'Initializing Terraform ... '
-
-echo "instana_agent_key=\"${INSTANA_AGENT_KEY}\"
-instana_download_key=\"${INSTANA_AGENT_KEY}\"
-instana_serverless_endpoint=\"${INSTANA_ENDPOINT_URL}\"
-project_id=\"${GOOGLE_CLOUD_PROJECT}\"
-region=\"${GOOGLE_CLOUD_REGION}\"
-" > ~/local.auto.tfvars
 
 if ! output=$(terraform init); then
     echo 'Failed:'
@@ -93,11 +97,11 @@ echo 'Applying Terraform ... '
 
 function finish {
     echo "Cleaning up (invoking 'terraform destroy -auto-approve')"
-    terraform destroy -auto-approve -var-file=~/local.auto.tfvars
+    terraform destroy -auto-approve -var-file=$HOME/local.auto.tfvars
 }
 trap finish EXIT
 
-terraform apply -auto-approve -var-file=~/local.auto.tfvars
+terraform apply -auto-approve -var-file=$HOME/local.auto.tfvars
 
 readonly loadgen_url=$(cat entrypoint_url)
 
@@ -107,7 +111,7 @@ echo "Demo entry point is available at: ${loadgen_url}"
 echo
 echo 'Preparing load generator ... '
 
-(cd load-gen && npm install -g > /dev/null 2>&1)
+(cd load-gen && npm install > /dev/null 2>&1)
 
 echo
 echo 'Starting the load generation'
